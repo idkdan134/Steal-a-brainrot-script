@@ -628,3 +628,41 @@ FlagsManager:SetIgnoreIndexes({})
 FlagsManager:SetFolder("Config/StealABrainrot")
 FlagsManager:InitSaveSystem(tabs.Config)
 lib:Notification('Swim hub', 'We appreciate you using our hub!', 3)
+
+stealBtn.MouseButton1Click:Connect(function()
+    local originalText = stealBtn.Text
+    stealBtn.Text = "💰 STEALING..."
+    stealBtn.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+ 
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") and char:FindFirstChild("Humanoid") then
+        -- Ragdoll the character first
+        local humanoid = char.Humanoid
+        humanoid.PlatformStand = true
+        humanoid:ChangeState(Enum.HumanoidStateType.Physics) -- Makes character ragdoll
+ 
+        -- Wait a brief moment for ragdoll to take effect
+        task.wait(0.1)
+ 
+        -- Then teleport
+        local pos = CFrame.new(0, -500, 0)
+        local startT = os.clock()
+        while os.clock() - startT < 1 do
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character.HumanoidRootPart.CFrame = pos
+            end
+            task.wait()
+        end
+ 
+        -- Un-ragdoll after teleportation
+        if char and char:FindFirstChild("Humanoid") then
+            humanoid.PlatformStand = false
+            humanoid:ChangeState(Enum.HumanoidStateType.Running)
+        end
+    end
+ 
+    -- Reset button after operation
+    task.wait(0.5)
+    stealBtn.Text = originalText
+    stealBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+end)
